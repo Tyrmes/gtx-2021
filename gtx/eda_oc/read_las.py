@@ -1,4 +1,3 @@
-import welly
 import lasio
 import glob
 from base import ROOT_DIR
