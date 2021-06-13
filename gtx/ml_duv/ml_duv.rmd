@@ -1,0 +1,51 @@
+---
+title: "ML Duvernay"
+author: oscar
+date: 6/12/2021
+output: html_document
+---
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+setwd("D:/PythonProjects/gtx-2021")
+```
+# Load the training data
+
+```{r}
+data_file_name <- "gtx/ml_duv/dataset_duv.csv"
+test_file_name <- "gtx/ml_duv/test_duv.csv"
+duv_data <- read.csv(data_file_name)
+duv_test <- read.csv(test_file_name)
+head(duv_data)
+```
+# Separate training and test datasets
+```{r}
+train_rows <- sample(1:nrow(duv_data), 0.75 * nrow(duv_data))
+train_set <- duv_data[train_rows, ]
+test_set <- duv_data[-train_rows, ]
+```
+# Apply linear regression to duv data
+```{r}
+duv.lm <- lm(TRUE_TEMP ~ SSTVD + X + Y, data = train_set)
+summary(duv.lm)
+plot(duv.lm)
+```
+# Understand performance in the test dataset
+```{r}
+tt_pred <- predict(duv.lm, test_set)
+mae <- mean(abs(tt_pred - test_set$TRUE_TEMP))
+r_squared <- cor(test_set$TRUE_TEMP, tt_pred)^2
+print(mae)
+```
+
+# Predict in the contest test dataset
+```{r}
+duv_test$TRUE_TEMP <- predict(duv.lm, duv_test)
+write.csv(duv_test, "gtx/ml_duv/duv_pred.csv")
+```
+
+
+
+
+
