@@ -31,10 +31,21 @@ duv.lm <- lm(TRUE_TEMP ~ SSTVD + X + Y, data = train_set)
 summary(duv.lm)
 plot(duv.lm)
 ```
+# Understand performance in the test dataset
 ```{r}
 tt_pred <- predict(duv.lm, test_set)
 mae <- mean(abs(tt_pred - test_set$TRUE_TEMP))
 r_squared <- cor(test_set$TRUE_TEMP, tt_pred)^2
-print(r_squared)
+print(mae)
 ```
+
+# Predict in the contest test dataset
+```{r}
+duv_test$TRUE_TEMP <- predict(duv.lm, duv_test)
+write.csv(duv_test, "gtx/ml_duv/duv_pred.csv")
+```
+
+
+
+
 
